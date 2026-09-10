@@ -95,7 +95,12 @@ export function collectWarnings({ nova, ems, form, settings }) {
     });
   }
 
-  if (nova?.hsApplicable && settings.includeHsFee && form.uniqueHSCodes >= 1) {
+  if (
+    form.senderType === "juridical" &&
+    nova?.hsApplicable &&
+    settings.includeHsFee &&
+    form.uniqueHSCodes >= 1
+  ) {
     const euros = form.uniqueHSCodes * 3;
     warnings.push({
       tone: "info",
@@ -103,7 +108,7 @@ export function collectWarnings({ nova, ems, form, settings }) {
     });
   }
 
-  if (form.countryCode === "US" && settings.includeUsaSurcharge) {
+  if (form.senderType === "juridical" && form.countryCode === "US" && settings.includeUsaSurcharge) {
     warnings.push({
       tone: "warn",
       text: "For USA, Nova Post adds 15% of invoice value.",

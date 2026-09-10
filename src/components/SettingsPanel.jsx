@@ -30,6 +30,7 @@ export default function SettingsPanel({ settings, errors, onChange }) {
           </label>
           <p className="placeholder" style={{ marginTop: 0 }}>
             Used to convert Nova Post’s €3 EU customs fee per unique HS code.
+            Extra Nova fees apply only when the sender is a juridical person.
           </p>
 
           <Toggle

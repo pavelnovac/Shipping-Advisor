@@ -35,6 +35,28 @@ export default function ShipmentForm({
     >
       <h2 className="panel-title">Shipment</h2>
 
+      <div className="section-label">Sender</div>
+      <div className="radio-row">
+        <label className={form.senderType === "physical" ? "active" : ""}>
+          <input
+            type="radio"
+            name="senderType"
+            checked={form.senderType !== "juridical"}
+            onChange={() => update("senderType", "physical")}
+          />
+          Physical person
+        </label>
+        <label className={form.senderType === "juridical" ? "active" : ""}>
+          <input
+            type="radio"
+            name="senderType"
+            checked={form.senderType === "juridical"}
+            onChange={() => update("senderType", "juridical")}
+          />
+          Juridical person
+        </label>
+      </div>
+
       <div className="section-label">Destination</div>
       <CountrySelect
         value={form.countryCode}
@@ -160,17 +182,19 @@ export default function ShipmentForm({
         </div>
       </div>
 
-      <label className="field">
-        <span>Number of unique HS codes</span>
-        <input
-          type="number"
-          min="1"
-          step="1"
-          value={form.uniqueHSCodes}
-          onChange={(event) => update("uniqueHSCodes", event.target.value)}
-        />
-        {errors.uniqueHSCodes && <div className="error">{errors.uniqueHSCodes}</div>}
-      </label>
+      {form.senderType === "juridical" && (
+        <label className="field">
+          <span>Number of unique HS codes</span>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={form.uniqueHSCodes}
+            onChange={(event) => update("uniqueHSCodes", event.target.value)}
+          />
+          {errors.uniqueHSCodes && <div className="error">{errors.uniqueHSCodes}</div>}
+        </label>
+      )}
 
       <div className="section-label">Shipment type</div>
       <div className="radio-row">

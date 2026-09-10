@@ -185,23 +185,28 @@ function CarrierCard({ title, cheapest, available, unavailableReason, finalCost,
 
 function novaRows(nova) {
   if (!nova.available) return [];
-  return [
+  const rows = [
     { label: "Base tariff", value: formatMDL(nova.baseRate) },
     { label: "Billable weight", value: formatKg(nova.billableWeightKg) },
     { label: "Actual weight", value: formatKg(nova.actualWeightKg) },
     { label: "Volumetric weight", value: formatKg(nova.volumetricWeightKg) },
-    { label: "HS customs fee", value: formatMDL(nova.hsFeeMDL) },
-    ...(nova.hsApplicable && nova.hsFeeEUR > 0
-      ? [
-          {
-            label: "HS conversion",
-            value: `${nova.uniqueHSCodes} HS × €3 = ${formatEUR(nova.hsFeeEUR)}`,
-          },
-        ]
-      : []),
-    { label: "Declared value fee", value: formatMDL(nova.declaredValueFee) },
-    { label: "US surcharge", value: formatMDL(nova.usaFee) },
   ];
+  if (nova.extrasIncluded) {
+    rows.push(
+      { label: "HS customs fee", value: formatMDL(nova.hsFeeMDL) },
+      ...(nova.hsApplicable && nova.hsFeeEUR > 0
+        ? [
+            {
+              label: "HS conversion",
+              value: `${nova.uniqueHSCodes} HS × €3 = ${formatEUR(nova.hsFeeEUR)}`,
+            },
+          ]
+        : []),
+      { label: "Declared value fee", value: formatMDL(nova.declaredValueFee) },
+      { label: "US surcharge", value: formatMDL(nova.usaFee) },
+    );
+  }
+  return rows;
 }
 
 function emsRows(ems) {
@@ -228,11 +233,16 @@ function buildDetails(nova, ems, form) {
         `billableWeight = ${formatKg(nova.billableWeightKg)}`,
         `tariffBracket = ${nova.tariffBracket}`,
         `baseRate = ${nova.baseRate}`,
-        `declaredValueMDL = ${nova.invoiceValueMDL}`,
-        `declaredValueFee = ${nova.declaredValueFee}`,
-        `HS fee = ${nova.uniqueHSCodes} × €3 = ${formatEUR(nova.hsFeeEUR)}`,
-        `HS fee MDL = ${nova.hsFeeMDL}`,
-        `usaFee = ${nova.usaFee}`,
+        `senderType = ${form.senderType ?? "physical"}`,
+        ...(nova.extrasIncluded
+          ? [
+              `declaredValueMDL = ${nova.invoiceValueMDL}`,
+              `declaredValueFee = ${nova.declaredValueFee}`,
+              `HS fee = ${nova.uniqueHSCodes} × €3 = ${formatEUR(nova.hsFeeEUR)}`,
+              `HS fee MDL = ${nova.hsFeeMDL}`,
+              `usaFee = ${nova.usaFee}`,
+            ]
+          : ["extraFees = not applied for physical person"]),
         `finalCost = ${nova.finalCost}`,
       ]
     : ["Nova:", nova.unavailableReason ?? "unavailable"];

@@ -146,12 +146,37 @@ describe("Nova extra charges", () => {
       includeDeclaredValueFee: true,
       includeHsFee: true,
       includeUsaSurcharge: true,
+      senderType: "juridical",
     });
     expect(result.baseRate).toBe(525);
     expect(result.declaredValueFee).toBe(5);
     expect(result.hsFeeMDL).toBe(0);
     expect(result.usaFee).toBe(150);
     expect(result.finalCost).toBe(680);
+  });
+
+  it("does not add extra Nova fees for a physical person", () => {
+    const result = calculateNova({
+      countryCode: "US",
+      actualWeightKg: 1,
+      lengthCm: 20,
+      widthCm: 10,
+      heightCm: 10,
+      invoiceValue: 1000,
+      invoiceCurrency: "MDL",
+      uniqueHSCodes: 2,
+      shipmentType: "parcel",
+      senderType: "physical",
+      eurToMdl: 20,
+      includeDeclaredValueFee: true,
+      includeHsFee: true,
+      includeUsaSurcharge: true,
+    });
+    expect(result.extrasIncluded).toBe(false);
+    expect(result.declaredValueFee).toBe(0);
+    expect(result.hsFeeMDL).toBe(0);
+    expect(result.usaFee).toBe(0);
+    expect(result.finalCost).toBe(525);
   });
 });
 

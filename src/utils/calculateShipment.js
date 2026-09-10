@@ -37,6 +37,7 @@ export function calculateShipment(form, settings) {
     invoiceCurrency: form.invoiceCurrency,
     uniqueHSCodes: shipment.values.hs,
     shipmentType: form.shipmentType,
+    senderType: form.senderType ?? "physical",
     eurToMdl: settingsCheck.eurToMdl,
     includeDeclaredValueFee: settings.includeDeclaredValueFee,
     includeHsFee: settings.includeHsFee,

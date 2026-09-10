@@ -109,6 +109,7 @@ export function calculateNova({
   invoiceCurrency,
   uniqueHSCodes,
   shipmentType = "parcel",
+  senderType = "physical",
   eurToMdl,
   includeDeclaredValueFee = true,
   includeHsFee = true,
@@ -128,6 +129,8 @@ export function calculateNova({
     actualWeightKg: actual,
     volumetricWeightKg,
     shipmentType,
+    senderType,
+    extrasIncluded: senderType === "juridical",
   };
 
   if (!rateRow) {
@@ -155,16 +158,17 @@ export function calculateNova({
     });
   }
 
+  const extrasIncluded = senderType === "juridical";
   const invoiceValueMDL = convertInvoiceToMDL(invoiceValue, invoiceCurrency, eurToMdl);
   const declaredValueFeeRaw = calculateDeclaredValueFee(invoiceValueMDL);
-  const declaredValueFee = includeDeclaredValueFee ? declaredValueFeeRaw : 0;
+  const declaredValueFee = extrasIncluded && includeDeclaredValueFee ? declaredValueFeeRaw : 0;
 
   const hs = calculateHsFee(countryCode, uniqueHSCodes, eurToMdl);
-  const hsFeeEUR = includeHsFee && hs.applicable ? hs.hsFeeEUR : 0;
-  const hsFeeMDL = includeHsFee && hs.applicable ? hs.hsFeeMDL : 0;
+  const hsFeeEUR = extrasIncluded && includeHsFee && hs.applicable ? hs.hsFeeEUR : 0;
+  const hsFeeMDL = extrasIncluded && includeHsFee && hs.applicable ? hs.hsFeeMDL : 0;
 
   const usa = calculateUsaSurcharge(countryCode, invoiceValueMDL);
-  const usaFee = includeUsaSurcharge && usa.applicable ? usa.usaFee : 0;
+  const usaFee = extrasIncluded && includeUsaSurcharge && usa.applicable ? usa.usaFee : 0;
 
   const finalCost = roundMoney(bracket.baseRate + declaredValueFee + hsFeeMDL + usaFee);
   const dimensionWarning = novaDimensionWarning(lengthCm, widthCm, heightCm);
@@ -181,12 +185,12 @@ export function calculateNova({
     invoiceValueMDL,
     declaredValueFee,
     declaredValueFeeRaw,
-    declaredValueIncluded: includeDeclaredValueFee,
-    hsApplicable: hs.applicable,
+    declaredValueIncluded: extrasIncluded && includeDeclaredValueFee,
+    hsApplicable: extrasIncluded && hs.applicable,
     hsFeeEUR,
     hsFeeMDL,
     uniqueHSCodes,
-    usaApplicable: usa.applicable,
+    usaApplicable: extrasIncluded && usa.applicable,
     usaFee,
     finalCost,
     dimensionWarning,

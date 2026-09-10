@@ -39,12 +39,14 @@ export function validateShipment(form) {
     errors.invoiceValue = "Invoice value cannot be negative.";
   }
 
-  if (hs == null) {
-    errors.uniqueHSCodes = "Enter the number of unique HS codes.";
-  } else if (!Number.isInteger(hs)) {
-    errors.uniqueHSCodes = "HS code count must be a whole number.";
-  } else if (hs < 1) {
-    errors.uniqueHSCodes = "HS code count must be at least 1.";
+  if (form.senderType === "juridical") {
+    if (hs == null) {
+      errors.uniqueHSCodes = "Enter the number of unique HS codes.";
+    } else if (!Number.isInteger(hs)) {
+      errors.uniqueHSCodes = "HS code count must be a whole number.";
+    } else if (hs < 1) {
+      errors.uniqueHSCodes = "HS code count must be at least 1.";
+    }
   }
 
   if (form.invoiceCurrency !== "MDL" && form.invoiceCurrency !== "EUR") {
@@ -60,7 +62,7 @@ export function validateShipment(form) {
       width,
       height,
       invoice: invoice ?? 0,
-      hs,
+      hs: hs ?? 1,
     },
   };
 }
