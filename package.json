@@ -1,0 +1,26 @@
+{
+  "name": "la-forma-shipping-calculator",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "LA FORMA internal shipping cost calculator for Poșta Moldovei EMS and Nova Post.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
+  }
+}
