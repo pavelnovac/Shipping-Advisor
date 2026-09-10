@@ -124,9 +124,11 @@ The Vite `base` path is set to `/Shipping-Advisor/` in GitHub Actions so the app
 
 Workflow: `.github/workflows/deploy.yml`
 
-1. In the GitHub repository open **Settings → Pages**.
-2. Set **Source** to **GitHub Actions**.
-3. Push to `main` (or run the workflow manually).
+**Do this once before the first successful deploy.** The Actions token cannot enable Pages by itself. If you skip this step, `deploy` fails with HTTP 404 (`Failed to create deployment` / `Ensure GitHub Pages has been enabled`).
+
+1. Open [Settings → Pages](https://github.com/pavelnovac/Shipping-Advisor/settings/pages).
+2. Under **Build and deployment → Source**, choose **GitHub Actions**.
+3. Re-run the failed **Deploy to GitHub Pages** workflow, or push to `main`.
 
 The workflow installs dependencies, runs tests, builds the static site, and publishes `dist`.
 
