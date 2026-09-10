@@ -6,23 +6,16 @@ export default function ResultsPanel({ form, result }) {
   const [copied, setCopied] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  if (!result) {
+  if (!result?.ok) {
+    const missingCountry = result?.errors?.countryCode && !form.countryCode;
     return (
       <section className="panel">
         <h2 className="panel-title">Results</h2>
         <p className="placeholder">
-          Fill in the shipment details and calculate to compare Poșta Moldovei EMS with Nova Post.
-          The recommendation is always based on final cost, not only the published base tariff.
+          {missingCountry
+            ? "Select a destination country to see the live EMS and Nova Post comparison."
+            : "Fix the highlighted fields to calculate shipping cost."}
         </p>
-      </section>
-    );
-  }
-
-  if (!result.ok) {
-    return (
-      <section className="panel">
-        <h2 className="panel-title">Results</h2>
-        <p className="placeholder">Fix the highlighted fields to calculate shipping cost.</p>
       </section>
     );
   }

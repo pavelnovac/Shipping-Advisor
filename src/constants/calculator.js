@@ -46,12 +46,12 @@ export const DEFAULT_SETTINGS = {
 
 export const EMPTY_FORM = {
   countryCode: "",
-  weight: "",
-  weightUnit: "kg",
-  length: "",
-  width: "",
-  height: "",
-  invoiceValue: "",
+  weight: "780",
+  weightUnit: "g",
+  length: "39",
+  width: "25",
+  height: "23",
+  invoiceValue: "95",
   invoiceCurrency: "EUR",
   uniqueHSCodes: 1,
   shipmentType: "parcel",

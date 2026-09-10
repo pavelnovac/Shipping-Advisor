@@ -13,7 +13,6 @@ import { loadSettings, persistSettings } from "./utils/settings.js";
 export default function App() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [settings, setSettings] = useState(loadSettings);
-  const [live, setLive] = useState(false);
   const [history, setHistory] = useState(loadHistory);
 
   useEffect(() => {
@@ -28,30 +27,25 @@ export default function App() {
   }, [history]);
 
   const computed = useMemo(() => calculateShipment(form, settings), [form, settings]);
-  const errors = live ? computed.errors : {};
-  const result = live ? computed : null;
+  const errors = computed.errors;
+  const result = computed;
 
   function calculate() {
-    setLive(true);
-    const next = calculateShipment(form, settings);
-    if (next.ok) {
-      setHistory((items) => [historyEntryFromCalculation({ form, result: next, settings }), ...items]);
+    if (computed.ok) {
+      setHistory((items) => [historyEntryFromCalculation({ form, result: computed, settings }), ...items]);
     }
   }
 
   function resetForm() {
     setForm(EMPTY_FORM);
-    setLive(false);
   }
 
   function openHistory(item) {
     setForm({ ...EMPTY_FORM, ...item.form });
-    setLive(true);
   }
 
   function duplicateHistory(item) {
     setForm({ ...EMPTY_FORM, ...item.form });
-    setLive(false);
   }
 
   return (
